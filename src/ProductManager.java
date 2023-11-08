@@ -3,7 +3,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 public class ProductManager {
     private List<Product> products = new ArrayList<>();
@@ -55,6 +54,7 @@ public class ProductManager {
 
         if (filteredProducts.isEmpty()) {
             System.out.println("Product doesn't exist or please ensure you have provided correct product information.");
+            return;
         } else {
             System.out.println("Product found: ");
             for (Product product : filteredProducts) {
@@ -90,117 +90,106 @@ public class ProductManager {
     public void displayProductRefill(Long productId) {
         if (!searchByProductId(productId)) {
             System.out.println("Product doesn't exist.");
+            return;
         }
         Product targetProduct = productInventory.get(productId);
         System.out.println(targetProduct.getProductName() + " need to be replenished by " + (targetProduct.getMinDisplayNum() - targetProduct.getQuantity()) + ".");
     }
 
-    public void displayProductCount() {
+    public boolean displayProductCount() {
         Integer countOfAllProduct = Integer.valueOf(0);
         if (products.isEmpty()) {
             System.out.println("There is no product.");
+            return false;
         } else {
             for (Product product : products) {
-                countOfAllProduct =+ product.getQuantity();
+                countOfAllProduct = +product.getQuantity();
             }
             if (countOfAllProduct != 0) {
-                System.out.println("The amount of all the products on the shelf is " + countOfAllProduct);
+                System.out.println("The amount of all the products on the shelf is " + countOfAllProduct + ".");
+                return true;
             } else {
-                System.out.println("There is no product on the shelf. ");
+                System.out.println("There is no product on the shelf.");
+                return false;
             }
         }
     }
+
     public void displayProductCountById(Long productId) {
         if (!searchByProductId(productId)) {
             System.out.println("Product doesn't exist.");
+            return;
         }
         Product targetProduct = productInventory.get(productId);
-        System.out.println(targetProduct.getProductName() + " on the shelf is " + targetProduct.getQuantity());
+        System.out.println(targetProduct.getProductName() + " on the shelf is " + targetProduct.getQuantity() + ".");
+    }
+
+    public void displayAllProductsExpiryDate() {
+        System.out.println("Show all products' expiry date: ");
+        for (Product product : products) {
+            System.out.println(product.getProductName() + " will be expiry on " + product.getExpiryDate() + ".");
+        }
+    }
+
+    public void displayProductsExpiryDateByProductId(Long productID) {
+        if (!searchByProductId(productID)) {
+            System.out.println("This product doesn't exist!");
+        } else {
+            Product targetProduct = productInventory.get(productID);
+            System.out.println(targetProduct.getProductName() + "'s expiry date is " + targetProduct.getExpiryDate() + ".");
+        }
+    }
+
+    public void displayExpiredProducts() {
+        List<Product> filteredProduct = new ArrayList<>();
+        if (products.isEmpty()) {
+            System.out.println("There is no product on the shelf.");
+        } else {
+            for (Product product : products) {
+                if (LocalDate.now().isAfter(product.getExpiryDate())) {
+                    filteredProduct.add(product);
+                    System.out.println("Attention: " + product.getProductName() + " ," + product.getProductID() + "(" + product.getExpiryDate() + ") has expired. Remove it as soon as possible!");
+                }
+            }
+            if (filteredProduct.isEmpty()) {
+                System.out.println("No product is expired.");
+            };
+        }
+    }
+
+    public void displayProductsForMarkDown() {
+        List<Product> filteredProduct = new ArrayList<>();
+        if (products.isEmpty()) {
+            System.out.println("There is no product on the shelf.");
+        } else {
+            for (Product product : products) {
+                if (LocalDate.now().plusDays(7).isAfter(product.getMarkDownDate())) {
+                    System.out.println("A list of product need to be marked down a week after now.");
+                    filteredProduct.add(product);
+                    System.out.println(product.getProductName() + " ," + product.getProductID() + ".");
+                }
+            }
+            if (filteredProduct.isEmpty()) {
+            System.out.println("No product need to be marked down in the coming week!");
+            }
+        }
+    }
+
+    public void displayProductsInMarkDown() {
+        List<Product> filteredProduct = new ArrayList<>();
+        if (products.isEmpty()) {
+            System.out.println("There is no product on the shelf.");
+        } else {
+            for (Product product : products) {
+                if (LocalDate.now().isAfter(product.getMarkDownDate())) {
+                    filteredProduct.add(product);
+                    System.out.println("A list of product which is past the Markdown Date.");
+                    System.out.println(product.getProductName() + " ," + product.getProductID() + ".");
+                }
+            }
+            if (filteredProduct.isEmpty()) {
+                System.out.println("No product in markdown list.");
+            }
+        }
     }
 }
-
-
-//
-//    public String displayProductsExpiryDate(String productID) throws Exception {
-//        if (productID == null) {
-//            throw new IllegalArgumentException("ProductID is mandatory for this function.");
-//        }
-//
-//        Optional<Product> optionalProduct = products.stream().filter(p -> p.productID.equals(productID)).findFirst();
-//
-//        if (!optionalProduct.isPresent()) {
-//            throw new Exception("Invalid ProductID: " + productID);
-//        }
-//
-//        Product product = optionalProduct.get();
-//        return "ProductID: " + product.productID + ", ProductName: " + product.productName + ", ExpiryDate: " + product.expiryDate;
-//    }
-//
-//    public List<String> displayProductsExpiryDate() {
-//        List<String> messages = new ArrayList<>();
-//
-//        if (products.isEmpty()) {
-//            messages.add("No products on shelf.");
-//            return messages;
-//        }
-//
-//        for (Product product : products) {
-//            messages.add("ProductID: " + product.productID + ", ProductName: " + product.productName + ", ExpiryDate: " + product.expiryDate);
-//        }
-//
-//        return messages;
-//    }
-//
-//    public List<String> displayExpiredProducts() {
-//        List<String> messages = new ArrayList<>();
-//
-//        LocalDate currentDate = LocalDate.now();
-//
-//        for (Product product : products) {
-//            if (product.expiryDate.isBefore(currentDate)) {
-//                messages.add("!!! EXPIRED !!! ProductID: " + product.productID + ", ProductName: " + product.productName + ", ExpiredDate: " + product.expiryDate);
-//            }
-//        }
-//
-//        if (messages.isEmpty()) {
-//            messages.add("No expired products on the shelf.");
-//        }
-//
-//        return messages;
-//    }
-//
-//    public List<String> displayProductsInMarkDown() {
-//        List<String> messages = new ArrayList<>();
-//        LocalDate currentDate = LocalDate.now();
-//
-//        for (Product product : products) {
-//            if (product.timeDurationForMarkDown.isBefore(currentDate)) {
-//                messages.add("ProductID: " + product.productID + ", ProductName: " + product.productName + ", MarkdownDate: " + product.timeDurationForMarkDown);
-//            }
-//        }
-//
-//        if (messages.isEmpty()) {
-//            messages.add("No products are past the MarkdownDate.");
-//        }
-//
-//        return messages;
-//    }
-//
-//    public List<String> displayProductsForMarkDown() {
-//        List<String> messages = new ArrayList<>();
-//        LocalDate currentDate = LocalDate.now();
-//        LocalDate oneWeekFromNow = currentDate.plusWeeks(1);
-//
-//        for (Product product : products) {
-//            if (!product.timeDurationForMarkDown.isBefore(currentDate) && product.timeDurationForMarkDown.isBefore(oneWeekFromNow)) {
-//                messages.add("ProductID: " + product.productID + ", ProductName: " + product.productName + ", MarkdownDate: " + product.timeDurationForMarkDown);
-//            }
-//        }
-//
-//        if (messages.isEmpty()) {
-//            messages.add("No products need to be marked down a week from now.");
-//        }
-//
-//        return messages;
-//    }
-//}

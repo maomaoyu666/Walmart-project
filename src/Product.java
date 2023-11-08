@@ -62,11 +62,11 @@ class Product {
         this.expiryDate = expiryDate;
     }
 
-    public LocalDate getTimeDurationForMarkDown() {
+    public LocalDate getMarkDownDate() {
         return markDownDate;
     }
 
-    public void setTimeDurationForMarkDown(LocalDate timeDurationForMarkDown) {
+    public void setgetMarkDownDate(LocalDate timeDurationForMarkDown) {
         this.markDownDate = timeDurationForMarkDown;
     }
 
@@ -80,7 +80,7 @@ class Product {
 
     @Override
     public String toString() {
-        return "Product name: " + this.productName + "; Product id: " + this.productID + "; Current quantity: " + this.quantity + "; Maximum display number: " + this.maxDisplayNum + "; Minimum display number: " + this.minDisplayNum + "; Expired date: " + this.expiryDate + "; Mark down date: " + this.markDownDate;
+        return "Product name: " + this.productName + "; Product id: " + this.productID + "; Current quantity: " + this.quantity + "; Maximum display number: " + this.maxDisplayNum + "; Minimum display number: " + this.minDisplayNum + "; Expired date: " + this.expiryDate + "; Mark down date: " + this.markDownDate + ".";
     }
 
 }
