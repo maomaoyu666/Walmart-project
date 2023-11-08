@@ -2,7 +2,7 @@ public class Testcases {
     public static void main(String[] args) {
         ProductManager manager = new ProductManager();
 
-        System.out.println("Test Cases for createProduct:");
+        System.out.println("Create product:");
         // I
         manager.createProduct(20231031L, "Apple", 4, 10, 5);
         manager.createProduct(20231031L, "Apple", 6, 10,5); // Throw exception: product should with unique productId

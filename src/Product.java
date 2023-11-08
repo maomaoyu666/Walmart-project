@@ -66,7 +66,7 @@ class Product {
         return markDownDate;
     }
 
-    public void setgetMarkDownDate(LocalDate timeDurationForMarkDown) {
+    public void setMarkDownDate(LocalDate timeDurationForMarkDown) {
         this.markDownDate = timeDurationForMarkDown;
     }
 

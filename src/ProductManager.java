@@ -143,7 +143,7 @@ public class ProductManager {
     public void displayExpiredProducts() {
         List<Product> filteredProduct = new ArrayList<>();
         if (products.isEmpty()) {
-            System.out.println("There is no product on the shelf.");
+            System.out.println("No product on the shelf.");
         } else {
             for (Product product : products) {
                 if (LocalDate.now().isAfter(product.getExpiryDate())) {
